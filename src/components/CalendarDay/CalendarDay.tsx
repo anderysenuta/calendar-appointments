@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import deepPurple from '@material-ui/core/colors/deepPurple';
 import { WithStyles, withStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { isSameMonth, isSameDay, getDate } from 'date-fns';
+import { isSameMonth, isSameDay, getDate, format } from 'date-fns';
+import { ReminderObj } from '../../redux/actions';
+import { Typography } from '@material-ui/core';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -11,7 +13,8 @@ const styles = (theme: Theme) => createStyles({
 		flex: '1 0 13%',
 		flexDirection: 'column',
 		border: '1px solid lightgray',
-		cursor: 'pointer'
+		cursor: 'pointer',
+		overflow: 'hidden'
 	},
 	dayCellOutsideMonth: {
 		display: 'flex',
@@ -54,7 +57,31 @@ const styles = (theme: Theme) => createStyles({
 		backgroundColor: deepPurple[800],
 	},
 	remindersContainer: {
-		height: '100%'
+		height: '70px',
+		margin: 5,
+	},
+	reminderItem: {
+		whiteSpace: 'nowrap',
+		textOverflow: 'ellipsis',
+		overflow: 'hidden'
+	},
+	reminderColor: {
+		display: 'inline-block',
+		width: '8px',
+		height: '8px',
+		borderRadius: '1px',
+	},
+	reminderTime: {
+		margin: '0 3px',
+		fontSize: '0.75rem',
+		display: 'inline-block',
+	},
+	reminderText: {
+		fontSize: '0.75rem',
+		display: 'inline-block',
+	},
+	showMore: {
+		fontSize: '0.625rem',
 	}
 });
 
@@ -65,11 +92,12 @@ interface DateObj {
 interface Props extends WithStyles<typeof styles>{
 	calendarDate: Date,
 	dateObj: DateObj,
-	onDayClick: (dateObj: DateObj) => void
+	onDayClick: (dateObj: DateObj) => void,
+	reminders: ReminderObj[],
 }
 
 const CalendarDay = (props: Props) => {
-	const { classes, dateObj, calendarDate, onDayClick } = props;
+	const { classes, dateObj, calendarDate, onDayClick, reminders } = props;
 	const [ focused, setFocused ] = useState(false)
 
 	const isToday = isSameDay( dateObj.date, new Date() );
@@ -94,7 +122,23 @@ const CalendarDay = (props: Props) => {
 		>
 			<Avatar className={ avatarClass }>{ getDate( dateObj.date ) }</Avatar>
 			<div className={ classes.remindersContainer }>
-				{/* reminders go here */}
+				{
+					reminders.slice(0, 3).map((item, i) => (
+						<div key={ i } className={ classes.reminderItem }>
+							<Avatar className={  classes.reminderColor } style={ { background: item.color } } />
+							<Typography className={ classes.reminderTime }>
+								{ format( item.date, 'HH:mm' ) }
+							</Typography>
+							<Typography className={ classes.reminderText }>
+								{ item.reminder }
+							</Typography>
+						</div>
+					))
+				}
+				{
+					reminders.length > 3 &&
+					<Typography className={ classes.showMore } color={'textSecondary'}>...show more</Typography>
+				}
 			</div>
 		</div>
 	)

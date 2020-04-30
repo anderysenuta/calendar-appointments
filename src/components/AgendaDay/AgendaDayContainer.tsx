@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import AgendaDay from './AgendaDay';
-import { closeAgenda } from '../../redux/actions';
+import { closeAgenda, ReminderObj } from '../../redux/actions';
+import * as dateFns from "date-fns";
 
 interface Props {}
 
@@ -8,13 +9,17 @@ interface State {
 	agendaStatus: {
 		isOpen: boolean,
 		date: Date
-	}
+	},
+	reminders: ReminderObj[]
 }
 
 const mapStateToProps = ( state: State, ownProps: Props ) => {
 	const { agendaStatus } = state;
+	const reminders = state.reminders
+		.filter(item => dateFns.isSameDay( item.date, agendaStatus.date ))
+		.sort((a, b) => dateFns.compareAsc( a.date, b.date ));
 
-	return { agendaStatus };
+	return { agendaStatus, reminders };
 }
 
 const mapDispatchToProps = (dispatch: any) => {

@@ -1,13 +1,20 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import CalendarDay from './CalendarDay';
-import { openAgenda } from '../../redux/actions';
+import { openAgenda, ReminderObj } from '../../redux/actions';
+import * as dateFns from 'date-fns';
 
 interface Props {
-
+	dateObj: {
+		date: Date
+	}
+}
+interface DateObj {
+	date: Date
 }
 
 interface State {
-
+	reminders: ReminderObj[]
 }
 
 interface DateObj {
@@ -15,7 +22,11 @@ interface DateObj {
 }
 
 const mapStateToProps = ( state: State, ownProps: Props ) => {
-	return { ...state, ...ownProps };
+	const reminders = state.reminders
+		.filter(item => dateFns.isSameDay( item.date, ownProps.dateObj.date ))
+		.sort((a, b) => dateFns.compareAsc( a.date, b.date ));
+
+	return { ...state, ...ownProps, reminders };
 }
 
 const mapDispatchToProps = (dispatch: any)=> {
@@ -26,6 +37,6 @@ const mapDispatchToProps = (dispatch: any)=> {
 	}
 }
 
-const CalendarDayContainer = connect( mapStateToProps, mapDispatchToProps )( CalendarDay );
+const CalendarDayContainer = connect( mapStateToProps, mapDispatchToProps )( React.memo(CalendarDay) );
 
 export default CalendarDayContainer;

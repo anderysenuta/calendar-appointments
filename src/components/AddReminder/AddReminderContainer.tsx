@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import AddReminder from './AddReminder';
-import { closeAddReminder } from '../../redux/actions';
+import { closeAddReminder, addReminder } from '../../redux/actions';
 
 interface State {
 	addReminderStatus: {
@@ -9,7 +9,7 @@ interface State {
 }
 
 const mapStateToProps = (state:State) => {
-	return { 
+	return {
 		isOpen: state.addReminderStatus.isOpen
 	};
 }
@@ -18,6 +18,10 @@ const mapDispatchToProps = (dispatch: any) => {
 	return {
 		onClose: () => {
 			dispatch( closeAddReminder() );
+		},
+		onSubmit: (reminder) => {
+			dispatch( closeAddReminder() );
+			dispatch( addReminder(reminder) );
 		}
 	}
 }

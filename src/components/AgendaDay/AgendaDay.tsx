@@ -1,4 +1,5 @@
 import React from 'react';
+import * as dateFns from 'date-fns';
 import CloseIcon from '@material-ui/icons/Close';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,7 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography'
 import { WithStyles, withStyles, Theme, createStyles } from '@material-ui/core/styles';
 
-import * as dateFns from 'date-fns';
+import { ReminderObj } from '../../redux/actions';
+import Avatar from '@material-ui/core/Avatar';
 
 const styles = (theme: Theme) => createStyles({
 	remindersContainer: {
@@ -25,6 +27,19 @@ const styles = (theme: Theme) => createStyles({
 	},
 	toolbarButtonVisible: {
 		visibility: 'visible'
+	},
+	reminderItem: {
+		display: 'flex',
+		alignItems: 'baseline',
+	},
+	reminderColor: {
+		display: 'block',
+		width: '12px',
+		height: '12px',
+		borderRadius: '2px',
+	},
+	reminderTime: {
+		margin: '0 10px'
 	}
 });
 
@@ -33,11 +48,12 @@ interface Props extends WithStyles<typeof styles>{
 		isOpen: boolean,
 		date: Date
 	}
-	onClose: () => void
+	onClose: () => void,
+	reminders: ReminderObj[]
 }
 
 const AgendaDay = (props: Props) => {
-	const { classes, agendaStatus, onClose } = props;
+	const { classes, agendaStatus, onClose, reminders } = props;
 	const dateTitle = agendaStatus.date ? dateFns.format( agendaStatus.date, 'LLLL do, yyyy' ) : 'Closing'
 
 	return (
@@ -56,9 +72,19 @@ const AgendaDay = (props: Props) => {
 			</DialogTitle>
 			<Divider light />
 			<DialogContent className={ classes.remindersContainer }>
-				<Typography>
-					Use this space to list the reminders.
-				</Typography>
+				{
+					reminders.map((item, i) => (
+						<div className={ classes.reminderItem } key={ i }>
+							<Avatar className={  classes.reminderColor } style={ { background: item.color } } />
+							<Typography className={ classes.reminderTime }>
+								{ dateFns.format( item.date, 'HH:mm' ) }
+							</Typography>
+							<Typography>
+								{ item.reminder }
+							</Typography>
+						</div>
+					))
+				}
 			</DialogContent>
 		</Dialog>
 	);

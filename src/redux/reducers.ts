@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux';
-import { 
+import {
 	OPEN_AGENDA,
 	CLOSE_AGENDA,
 	OPEN_ADD_REMINDER,
-	CLOSE_ADD_REMINDER
+	CLOSE_ADD_REMINDER,
+	ADD_REMINDER
 } from './actions';
 
 const initialAgendaState = {
@@ -14,6 +15,8 @@ const initialAgendaState = {
 const initialAddReminderState = {
 	isOpen: false
 }
+
+const initialReminders = [];
 
 function agendaStatus( state = initialAgendaState , action: any ) {
 	switch( action.type ) {
@@ -45,9 +48,18 @@ function addReminderStatus( state = initialAddReminderState, action: any ) {
 	}
 }
 
+function reminders( state = initialReminders, action: any ) {
+	switch( action.type ) {
+		case ADD_REMINDER:
+			return [...state, action.reminder]
+		default: return state
+	}
+}
+
 const calendarApp = combineReducers( {
 	agendaStatus,
-	addReminderStatus
+	addReminderStatus,
+	reminders,
 } )
 
 export default calendarApp;

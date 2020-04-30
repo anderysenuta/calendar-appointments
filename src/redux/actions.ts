@@ -3,9 +3,16 @@ export const OPEN_AGENDA = 'OPEN_AGENDA';
 export const CLOSE_AGENDA = 'CLOSE_AGENDA';
 export const OPEN_ADD_REMINDER = 'OPEN_ADD_REMINDER';
 export const CLOSE_ADD_REMINDER = 'CLOSE_ADD_REMINDER';
+export const ADD_REMINDER = 'ADD_REMINDER';
 
 interface DateObj {
 	date: Date
+}
+
+export interface ReminderObj {
+	reminder: string;
+	color: string;
+	date: Date;
 }
 
 // action creators
@@ -23,4 +30,8 @@ export function openAddReminder( reminder?: any ) {
 
 export function closeAddReminder() {
 	return { type: CLOSE_ADD_REMINDER };
+}
+
+export function addReminder(reminder: ReminderObj) {
+	return { type: ADD_REMINDER, reminder };
 }

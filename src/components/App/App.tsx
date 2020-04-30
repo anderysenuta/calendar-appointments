@@ -67,7 +67,7 @@ class App extends Component<Props, State> {
 		};
 	}
 
-	compnentDidMount() {
+	componentDidMount() {
 
 	}
 
