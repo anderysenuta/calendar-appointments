@@ -60,7 +60,7 @@ const AddReminder = (props: Props) => {
 		setReminder(e.target.value)
 	}
 
-	const handleColorChange = () => setColor( color.hex );
+	const handleColorChange = (color) => setColor( color.hex );
 
 	const handleSubmit = () => onSubmit({ reminder, color, date });
 
